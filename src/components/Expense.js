@@ -33,9 +33,15 @@ export const Expense = (props) => {
   const [RData, setRData] = useState({});
 
   const updateData = (rData) => {
-    setUpdateForm(!UpdateForm);
+    setUpdateForm(true);
     setRData(rData);
+    setTitle(RData.title);
+    setAmount(RData.amount);
+    setDates(new Date(RData.date).toISOString().substring(0, 10));
   };
+
+  console.log(RData.date, Dates);
+
   return (
     <div className="App">
       <div className="new-expense">
@@ -45,7 +51,7 @@ export const Expense = (props) => {
               <label>Title</label>
               <input
                 type="text"
-                value={UpdateForm ? RData.title : Title}
+                value={Title}
                 onChange={(e) => {
                   setTitle(e.target.value);
                 }}
@@ -57,7 +63,7 @@ export const Expense = (props) => {
                 type="number"
                 min="0.01"
                 step="0.01"
-                value={UpdateForm ? RData.amount : Amount}
+                value={Amount}
                 onChange={(e) => {
                   setAmount(e.target.value);
                 }}
@@ -68,12 +74,8 @@ export const Expense = (props) => {
               <input
                 type="date"
                 min="2019-01-01"
-                max="2022-12-31"
-                value={
-                  UpdateForm
-                    ? new Date(RData.date).toISOString().substring(0, 10)
-                    : Dates
-                }
+                max="2023-12-31"
+                value={Dates}
                 onChange={(e) => {
                   setDates(e.target.value);
                 }}
@@ -85,6 +87,26 @@ export const Expense = (props) => {
               onClick={(e) => {
                 e.preventDefault();
                 if (UpdateForm) {
+                  console.log(RData);
+                  const updateData = {
+                    id: RData.id,
+                    title: Title,
+                    amount: Amount,
+                    date: Dates,
+                  };
+
+                  let newData = Data.map((item) => {
+                    if (parseInt(item.id) === parseInt(updateData.id)) {
+                      item.id = updateData.id;
+                      item.title = Title;
+                      item.amount = Amount;
+                      item.date = new Date(Dates);
+                    }
+                    return item;
+                  });
+                  console.log(newData);
+                  setData(newData);
+                  setUpdateForm(false);
                 } else {
                   setId(Id + 1);
                   e.preventDefault();
@@ -100,7 +122,6 @@ export const Expense = (props) => {
                 setTitle("");
                 setAmount("");
                 setDates("");
-                setUpdateForm(!UpdateForm);
               }}
             >
               {UpdateForm ? "Update" : "Add Expense"}

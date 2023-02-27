@@ -22,7 +22,7 @@ const ExpenseItem = (props) => {
             id: props.data.id,
             title: props.data.title,
             amount: props.data.amount,
-            date: new Date(props.data.date),
+            date: props.data.date,
           };
           props.onUpdateData(requireData);
         }}
